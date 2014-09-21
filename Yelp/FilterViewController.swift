@@ -33,8 +33,6 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         // Pass the selected object to the new view controller.
     }
     
-
-    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return filterViewModel.sections.count
     }
@@ -56,14 +54,6 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
     }
-
-    // FOR TOGGLING SELECTION??
-//    -(NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-//    NSIndexPath *oldIndex = [self.tableView indexPathForSelectedRow];
-//    [self.tableView cellForRowAtIndexPath:oldIndex].accessoryType = UITableViewCellAccessoryNone;
-//    [self.tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryCheckmark;
-//    return indexPath;
-//    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("filterCell") as FilterTableViewCell
@@ -71,22 +61,8 @@ class FilterViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let labels = filterViewModel.getVisibleFilterLabelsForSection(indexPath.section)
         
         cell.filterLabel.text = labels[indexPath.row]
-        cell.accessoryType = filterViewModel.getRowAccessoryType(indexPath)
-        cell.setSelected(true, animated: true)
-        
-//        if section.sectionType == SectionType.Toggle {
-//            // Add a toggle button here
-//        } else if section.sectionType == SectionType.MultiSelect {
-//            cell.accessoryType = filterViewModel.getRowAccessoryType(indexPath)
-//            cell.setSelected(true, animated: true)
-//        } else if section.sectionType == SectionType.Collapsable {
-//            if section.isExpanded {
-//                // Add radio buttons here
-//            } else {
-//                // Add a down arrow here
-//            }
-//            
-//        }
+        cell.setCellForState(section.sectionType, isExpanded: section.isExpanded, accessoryType: filterViewModel.getRowAccessoryType(indexPath))
+
         return cell
     }
     

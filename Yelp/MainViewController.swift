@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class MainViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
 
     let consumerKey = "x5eW27jw5Szc6mfmx8TEAw"
     let consumerSecret = "AyDNSyfnsWwlwHkN-JTV4KDVC8A"
@@ -27,10 +27,24 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let searchBar = UISearchBar(frame: CGRectMake(-5.0, 0.0, 210, 44))
+        searchBar.autoresizingMask = UIViewAutoresizing.FlexibleWidth
+        searchBar.searchBarStyle = UISearchBarStyle.Minimal
+        let searchBarView = UIView(frame: CGRectMake(0.0, 0.0, 200.0, 44.0))
+        
+        let filterButton = UIBarButtonItem(title: "Filter", style: UIBarButtonItemStyle.Bordered, target: self, action: "filterButtonTouched:")
+        let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        filterButton.setTitleTextAttributes(titleDict, forState: UIControlState.Normal)
+        
+        searchBarView.addSubview(searchBar)
+        
+        self.navigationItem.titleView = searchBarView
+        self.navigationItem.leftBarButtonItem = filterButton
         
         tableView.delegate = self
         tableView.dataSource = self
-//        tableView.rowHeight = UITableViewAutomaticDimension
+        searchBar.delegate = self
         
         // Do any additional setup after loading the view, typically from a nib.
         client = YelpClient(consumerKey: consumerKey, consumerSecret: consumerSecret, accessToken: token, accessSecret: tokenSecret)

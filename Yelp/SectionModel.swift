@@ -58,13 +58,13 @@ class SectionModel {
     func didSelectElement(element: Int) {
         println("Toggled \(filters[element].labelName)")
         if sectionType == SectionType.MultiSelect {
-            filters[element].selected = !filters[element].selected
+            filters[element].toggleSelected()
         } else if sectionType == SectionType.Collapsable {
             let previousSelected = selectedElement
             selectedElement = filters[element]
-            selectedElement!.selected = true
+            selectedElement!.toggleSelected()
             if previousSelected != nil {
-                previousSelected!.selected = false
+                previousSelected!.toggleSelected()
             }
         }
     }
