@@ -17,7 +17,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     
     var client: YelpClient!
     var results: [BusinessModel] = []
-//    var results: [NSDictionary]!
+    var searchBar: UISearchBar!
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -28,12 +28,12 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let searchBar = UISearchBar(frame: CGRectMake(-5.0, 0.0, 210, 44))
+        searchBar = UISearchBar(frame: CGRectMake(-5.0, 0.0, 210, 44))
         searchBar.autoresizingMask = UIViewAutoresizing.FlexibleWidth
         searchBar.searchBarStyle = UISearchBarStyle.Minimal
         let searchBarView = UIView(frame: CGRectMake(0.0, 0.0, 200.0, 44.0))
         
-        let filterButton = UIBarButtonItem(title: "Filter", style: UIBarButtonItemStyle.Bordered, target: self, action: "filterButtonTouched:")
+        let filterButton = UIBarButtonItem(title: "Filter", style: UIBarButtonItemStyle.Bordered, target: self, action: "filterButtonTouched")
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         filterButton.setTitleTextAttributes(titleDict, forState: UIControlState.Normal)
         
@@ -41,6 +41,9 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         self.navigationItem.titleView = searchBarView
         self.navigationItem.leftBarButtonItem = filterButton
+        
+//        let tapGesture = UITapGestureRecognizer(target: self, action: "dismissKeyboard:")
+//        self.view.addGestureRecognizer(tapGesture)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -92,6 +95,22 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         return cell
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        searchBar.resignFirstResponder()
+        view.endEditing(true)
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    }
 
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        view.endEditing(true)
+        // perform search
+    }
+    
+    func filterButtonTouched() {
+        println("Filter button pressed")
+        self.performSegueWithIdentifier("filterSegue", sender: tableView)
+    }
 }
 

@@ -90,6 +90,7 @@
                     <navigationItem key="navigationItem" id="V4I-WR-Epd"/>
                     <connections>
                         <outlet property="tableView" destination="8QC-Ty-Zlw" id="sKe-KC-w5y"/>
+                        <segue destination="l3v-ve-nrn" kind="show" identifier="filterSegue" id="oKq-dG-EDZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -124,10 +125,13 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3al-la-prM">
+                                                <switch hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3al-la-prM">
                                                     <rect key="frame" x="524" y="9" width="51" height="31"/>
                                                     <color key="onTintColor" red="0.76862752440000004" green="0.090196080509999998" blue="0.039215687659999998" alpha="1" colorSpace="deviceRGB"/>
                                                     <color key="thumbTintColor" red="0.85393415179999999" green="0.82060482020000003" blue="0.84188205569999996" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <connections>
+                                                        <action selector="switchToggled:" destination="jDt-KU-Uaa" eventType="valueChanged" id="bVO-mG-I38"/>
+                                                    </connections>
                                                 </switch>
                                                 <imageView hidden="YES" userInteractionEnabled="NO" alpha="0.79999999999999982" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="down arrow" translatesAutoresizingMaskIntoConstraints="NO" id="Hdk-WL-dmf">
                                                     <rect key="frame" x="533" y="10" width="30" height="30"/>

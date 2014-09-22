@@ -46,7 +46,10 @@ class FilterTableViewCell: UITableViewCell {
                 arrowImageView.hidden = false
                 filterSwitch.hidden = true
             }
-            
         }
+    }
+    
+    @IBAction func switchToggled(sender: AnyObject) {
+        
     }
 }
