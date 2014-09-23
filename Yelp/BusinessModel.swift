@@ -9,12 +9,14 @@
 import Foundation
 
 class BusinessModel {
-    var name, address, phone: String!
-    var numReviews: Int
+    var name, address, phone, categories: String!
+    var numReviews: Int!
     var neighborhoods: NSArray!
+    var distance: Float?
     var longitude, latitude: Float?
     
-    var profileURL, ratingURL: String!
+    var profileURL: String?
+    var ratingURL: String!
     
     init(dictionary: NSDictionary){
         name = dictionary["name"] as String
@@ -23,18 +25,37 @@ class BusinessModel {
         
         let fullAddress = locDict["display_address"] as NSArray
         address = fullAddress[0] as String
-        neighborhoods = locDict["neighborhoods"] as NSArray
+        
+        if let hoods = locDict["neighborhoods"] as? NSArray {
+            neighborhoods = hoods
+        }
         
         if let coordinate = locDict["coordinate"] as? NSDictionary {
             longitude = coordinate["longitude"] as? Float
             latitude = coordinate["latitude"] as? Float
         }
         
-        phone = dictionary["display_phone"] as String
+        if let distanceInMeters = dictionary["distance"] as? Float {
+            distance = metersToMiles(distanceInMeters)
+        }
+        
+        if dictionary["display_phone"] != nil {
+            phone = dictionary["display_phone"] as String
+        }
         numReviews = dictionary["review_count"] as Int
         
-        profileURL = dictionary["image_url"] as String
+        if dictionary["image_url"] != nil {
+            profileURL = dictionary["image_url"] as? String
+        }
         ratingURL = dictionary["rating_img_url"] as String
+        
+        let categoryArray = dictionary["categories"] as NSArray
+        var displayNames = [String]()
+        for category in categoryArray {
+            let displayCategory = category[0] as String
+            displayNames.append(displayCategory)
+        }
+        categories = ", ".join(displayNames)
     }
     
     class func resultsFromArray(results: NSArray) -> [BusinessModel] {

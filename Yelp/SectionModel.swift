@@ -57,15 +57,15 @@ class SectionModel {
     
     func didSelectElement(element: Int) {
         println("Toggled \(filters[element].labelName)")
-        if sectionType == SectionType.MultiSelect {
-            filters[element].toggleSelected()
-        } else if sectionType == SectionType.Collapsable {
+        if sectionType == SectionType.Collapsable {
             let previousSelected = selectedElement
             selectedElement = filters[element]
             selectedElement!.toggleSelected()
             if previousSelected != nil {
                 previousSelected!.toggleSelected()
             }
+        } else {
+            filters[element].toggleSelected()
         }
     }
     
@@ -78,11 +78,7 @@ class SectionModel {
         }
         return selectedElements
     }
-    
-    func getSelectedParameters() -> NSArray? {
-        // Return a list of parameter names
-        return []
-    }
+
 }
 
 class FilterModel {
@@ -108,7 +104,7 @@ class FiltersViewModel {
     }
     
     func buildFilterTable() {
-        var categorySection = SectionModel(sectionType: SectionType.MultiSelect, title: "Category", apiKey: "category_filter", filterValues: ["American (New)": "newamerican", "American (Traditional)": "tradamerican", "Asian Fusian": "asianfusion", "Barbeque": "bbq", "Brazilian": "brazilian", "Breakfast & Brunch": "breakfast_brunch", "Burmese": "burmese", "Cafes": "cafes", "Caribbean": "caribbean", "Chinese": "chinese", "Cuban": "cuban", "Delis": "delis", "Ethipian": "ethiopian", "Fast Food": "hotdogs", "French": "french", "Gastropubs": "gastropubs", "German": "german", "Indian": "indian", "Japanese": "japanese", "Korean": "korean", "Mexican": "mexican", "Middle Eastern": "mideastern", "Pizza": "pizza", "Russian": "russian", "Sandwiches": "sandwiches", "Seafood": "seafood", "Spanish": "spanish", "Steakhouses": "steak", "Sushi": "sushi", "Taiwanese": "taiwanese", "Thai": "thai", "Vegetarian": "vegetarian", "Vietnamese": "vietnamese"])
+        var categorySection = SectionModel(sectionType: SectionType.MultiSelect, title: "Category", apiKey: "category_filter", filterValues: ["American (New)": "newamerican", "American (Traditional)": "tradamerican", "Asian Fusian": "asianfusion", "Barbeque": "bbq", "Brazilian": "brazilian", "Breakfast & Brunch": "breakfast_brunch", "Burmese": "burmese", "Cafes": "cafes", "Caribbean": "caribbean", "Chinese": "chinese", "Cuban": "cuban", "Delis": "delis", "Ethiopian": "ethiopian", "Fast Food": "hotdogs", "French": "french", "Gastropubs": "gastropubs", "German": "german", "Indian": "indian", "Japanese": "japanese", "Korean": "korean", "Mexican": "mexican", "Middle Eastern": "mideastern", "Pizza": "pizza", "Russian": "russian", "Sandwiches": "sandwiches", "Seafood": "seafood", "Spanish": "spanish", "Steakhouses": "steak", "Sushi": "sushi", "Taiwanese": "taiwanese", "Thai": "thai", "Vegetarian": "vegetarian", "Vietnamese": "vietnamese"])
         
         var sortBySection = SectionModel(sectionType: SectionType.Collapsable, title: "Sort By", apiKey: "sort", filterValues: ["Best Match": "0", "Distance": "1", "Highest Rated": "2"])
         
@@ -175,8 +171,7 @@ class FiltersViewModel {
                 section.didSelectElement(indexPath.row)
             }
         case SectionType.Toggle:
-            // Maybe this should only toggle when the toggle is actually touched
-//            section.toggleSelectedForElement(indexPath.row)
+            // Don't do anything here
             break
         }
         
@@ -188,5 +183,27 @@ class FiltersViewModel {
             return UITableViewCellAccessoryType.Checkmark
         }
         return UITableViewCellAccessoryType.None
+    }
+    
+    func getSelectedParameters() -> [String: String] {
+        var parameters = [String: String]()
+        for section in sections {
+            var searchElements = [String]()
+            
+            for element in section.getSelectedElements() {
+                searchElements.append(element.searchParam)
+            }
+            
+            if !searchElements.isEmpty {
+                if section.sectionType == SectionType.Collapsable {
+                    parameters[section.apiKey] = searchElements[0]
+                } else if section.sectionType == SectionType.MultiSelect {
+                    parameters[section.apiKey] = ",".join(searchElements)
+                } else {
+                    parameters[searchElements[0]] = "true"
+                }
+            }
+        }
+        return parameters
     }
 }

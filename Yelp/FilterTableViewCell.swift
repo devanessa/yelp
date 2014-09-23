@@ -14,6 +14,9 @@ class FilterTableViewCell: UITableViewCell {
     @IBOutlet weak var filterSwitch: UISwitch!
     @IBOutlet weak var arrowImageView: UIImageView!
     
+    var delegate: ToggleDelegate?
+    var indexPath: NSIndexPath!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -50,6 +53,6 @@ class FilterTableViewCell: UITableViewCell {
     }
     
     @IBAction func switchToggled(sender: AnyObject) {
-        
+        delegate?.didSwitchToggle(self)
     }
 }

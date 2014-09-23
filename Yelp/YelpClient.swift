@@ -7,6 +7,13 @@
 //
 
 import UIKit
+import CoreLocation
+
+func += <KeyType, ValueType> (inout left: Dictionary<KeyType, ValueType>, right: Dictionary<KeyType, ValueType>) {
+    for (k, v) in right {
+        left.updateValue(v, forKey: k)
+    }
+}
 
 class YelpClient: BDBOAuth1RequestOperationManager {
     var accessToken: String!
@@ -26,10 +33,24 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         self.requestSerializer.saveAccessToken(token)
     }
     
-    func searchWithTerm(term: String, sort: Int = 0, category_filter: String = "", radius_filter: Int = 0, success: (AFHTTPRequestOperation!, AnyObject!) -> Void, failure: (AFHTTPRequestOperation!, NSError!) -> Void) -> AFHTTPRequestOperation! {
-        // For additional parameters, see http://www.yelp.com/developers/documentation/v2/search_api
-        var parameters = ["term": term, "location": "San Francisco"]
+    func searchWithParamDictionary(params: [String: String], success: (AFHTTPRequestOperation!, AnyObject!) -> Void, failure: (AFHTTPRequestOperation!, NSError!) -> Void) -> AFHTTPRequestOperation! {
+        var parameters = params
+        parameters["location"] = "San Francisco"
         return self.GET("search", parameters: parameters, success: success, failure: failure)
     }
     
+    func doSearch(term: String, location: String = "San Francisco", coordinates: CLLocationCoordinate2D?, parameters: [String: String]?, success: (AFHTTPRequestOperation!, AnyObject!) -> Void, failure: (AFHTTPRequestOperation!, NSError!) -> Void) -> AFHTTPRequestOperation! {
+        var params = ["term": term]
+        if coordinates != nil {
+            params["ll"] = "\(coordinates!.latitude),\(coordinates!.longitude)"
+        } else {
+            params["location"] = location
+        }
+        if parameters != nil {
+            params += parameters!
+        }
+        
+        println("search params: \(params)")
+        return self.GET("search", parameters: params, success: success, failure: failure)
+    }
 }
