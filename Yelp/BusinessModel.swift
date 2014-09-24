@@ -11,7 +11,7 @@ import Foundation
 class BusinessModel {
     var name, address, phone, categories: String!
     var numReviews: Int!
-    var neighborhoods: NSArray!
+    var neighborhood: String = ""
     var distance: Float?
     var longitude, latitude: Float?
     
@@ -27,7 +27,7 @@ class BusinessModel {
         address = fullAddress[0] as String
         
         if let hoods = locDict["neighborhoods"] as? NSArray {
-            neighborhoods = hoods
+            neighborhood = hoods[0] as String
         }
         
         if let coordinate = locDict["coordinate"] as? NSDictionary {

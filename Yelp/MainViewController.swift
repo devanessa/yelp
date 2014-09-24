@@ -96,7 +96,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
             // let del
             let business = results[indexPath.row] as BusinessModel
             cell.businessLabel.text = business.name
-            cell.addressLabel.text = business.address
+            cell.addressLabel.text = "\(business.address), \(business.neighborhood)"
             cell.reviewCountLabel.text = "\(business.numReviews) Reviews"
 
             cell.ratingImageView.setImageWithURL(NSURL(string: business.ratingURL))

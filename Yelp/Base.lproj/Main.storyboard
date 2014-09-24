@@ -40,8 +40,8 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csU-6N-8g7">
-                                                    <rect key="frame" x="108" y="64" width="53" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Address" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="csU-6N-8g7">
+                                                    <rect key="frame" x="108" y="64" width="468" height="17"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -89,6 +89,7 @@
                                                 <constraint firstItem="kb1-QV-3hF" firstAttribute="leading" secondItem="HdS-aW-3qe" secondAttribute="trailing" constant="10" id="cEb-hr-Bf2"/>
                                                 <constraint firstItem="p6S-nc-BlK" firstAttribute="leading" secondItem="HdS-aW-3qe" secondAttribute="trailing" constant="9" id="s4S-kO-JDQ"/>
                                                 <constraint firstItem="csU-6N-8g7" firstAttribute="top" secondItem="kb1-QV-3hF" secondAttribute="bottom" constant="5" id="sEU-ul-3AB"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="csU-6N-8g7" secondAttribute="trailing" constant="16" id="tJp-Qg-Gsd"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="5cu-xy-jIh" secondAttribute="trailing" constant="16" id="vaf-Ui-0el"/>
                                             </constraints>
                                         </tableViewCellContentView>
