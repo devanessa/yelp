@@ -43,13 +43,16 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         var params = ["term": term]
         if coordinates != nil {
             params["ll"] = "\(coordinates!.latitude),\(coordinates!.longitude)"
+            params.removeValueForKey("location")
         } else {
             params["location"] = location
         }
         if parameters != nil {
             params += parameters!
         }
-        
+        if params["radius_filter"] != nil && params["radius_filter"] == "auto" {
+            params["radius_filter"] = nil
+        }
         println("search params: \(params)")
         return self.GET("search", parameters: params, success: success, failure: failure)
     }

@@ -25,13 +25,17 @@ class SectionModel {
     
     var isExpanded = false
     
-    init(sectionType: SectionType, title: String, apiKey: String, filterValues: [String:String]!) {
+    init(sectionType: SectionType, title: String, apiKey: String, filterValues: [String:String]!, selectedValue: String?) {
         self.sectionType = sectionType
         self.headerName = title
         self.apiKey = apiKey
         
         for (name, searchParam) in filterValues {
             var newFilter = FilterModel(name: name, param: searchParam)
+            if selectedValue != nil && selectedValue == newFilter.labelName {
+                newFilter.selected = true
+                self.selectedElement = newFilter
+            }
             filters.append(newFilter)
         }
         
@@ -104,13 +108,13 @@ class FiltersViewModel {
     }
     
     func buildFilterTable() {
-        var categorySection = SectionModel(sectionType: SectionType.MultiSelect, title: "Category", apiKey: "category_filter", filterValues: ["American (New)": "newamerican", "American (Traditional)": "tradamerican", "Asian Fusian": "asianfusion", "Barbeque": "bbq", "Brazilian": "brazilian", "Breakfast & Brunch": "breakfast_brunch", "Burmese": "burmese", "Cafes": "cafes", "Caribbean": "caribbean", "Chinese": "chinese", "Cuban": "cuban", "Delis": "delis", "Ethiopian": "ethiopian", "Fast Food": "hotdogs", "French": "french", "Gastropubs": "gastropubs", "German": "german", "Indian": "indian", "Japanese": "japanese", "Korean": "korean", "Mexican": "mexican", "Middle Eastern": "mideastern", "Pizza": "pizza", "Russian": "russian", "Sandwiches": "sandwiches", "Seafood": "seafood", "Spanish": "spanish", "Steakhouses": "steak", "Sushi": "sushi", "Taiwanese": "taiwanese", "Thai": "thai", "Vegetarian": "vegetarian", "Vietnamese": "vietnamese"])
+        var categorySection = SectionModel(sectionType: SectionType.MultiSelect, title: "Category", apiKey: "category_filter", filterValues: ["American (New)": "newamerican", "American (Traditional)": "tradamerican", "Asian Fusian": "asianfusion", "Barbeque": "bbq", "Brazilian": "brazilian", "Breakfast & Brunch": "breakfast_brunch", "Burmese": "burmese", "Cafes": "cafes", "Caribbean": "caribbean", "Chinese": "chinese", "Cuban": "cuban", "Delis": "delis", "Ethiopian": "ethiopian", "Fast Food": "hotdogs", "French": "french", "Gastropubs": "gastropubs", "German": "german", "Indian": "indian", "Japanese": "japanese", "Korean": "korean", "Mexican": "mexican", "Middle Eastern": "mideastern", "Pizza": "pizza", "Russian": "russian", "Sandwiches": "sandwiches", "Seafood": "seafood", "Spanish": "spanish", "Steakhouses": "steak", "Sushi": "sushi", "Taiwanese": "taiwanese", "Thai": "thai", "Vegetarian": "vegetarian", "Vietnamese": "vietnamese"], selectedValue: nil)
         
-        var sortBySection = SectionModel(sectionType: SectionType.Collapsable, title: "Sort By", apiKey: "sort", filterValues: ["Best Match": "0", "Distance": "1", "Highest Rated": "2"])
+        var sortBySection = SectionModel(sectionType: SectionType.Collapsable, title: "Sort By", apiKey: "sort", filterValues: ["Best Match": "0", "Distance": "1", "Highest Rated": "2"], selectedValue: "Best Match")
         
-        var distanceSection = SectionModel(sectionType: SectionType.Collapsable, title: "Distance", apiKey: "radius_filter", filterValues: ["Auto": "auto", "1 mile": "\(milesToMeters(1))", "5 miles": "\(milesToMeters(5))", "10 miles": "\(milesToMeters(10))", "25 miles": "\(milesToMeters(25))"])
+        var distanceSection = SectionModel(sectionType: SectionType.Collapsable, title: "Distance", apiKey: "radius_filter", filterValues: ["Auto": "auto", "1 mile": "\(milesToMeters(1))", "5 miles": "\(milesToMeters(5))", "10 miles": "\(milesToMeters(10))", "25 miles": "\(milesToMeters(25))"], selectedValue: "Auto")
         
-        var popularSection = SectionModel(sectionType: SectionType.Toggle, title: "Most Popular", apiKey: "", filterValues: ["Offering a Deal": "deals_filter"])
+        var popularSection = SectionModel(sectionType: SectionType.Toggle, title: "Most Popular", apiKey: "", filterValues: ["Offering a Deal": "deals_filter"], selectedValue: nil)
         
         sections = [popularSection, sortBySection, distanceSection, categorySection]
     }

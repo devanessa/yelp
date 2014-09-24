@@ -20,14 +20,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var results: [BusinessModel] = []
     var searchBar: UISearchBar!
     
-    var searchParams = ["term": "restaurants", "location": "San Francisco"] // Starting default parameters
+    let queryLimit = 25
+    var queryOffset = 0
+    
+    var searchParams = [String: String]()
     
     @IBOutlet weak var tableView: UITableView!
     
     let locationManager = CLLocationManager()
     var userCoordinate: CLLocationCoordinate2D?
-    
-//    var prototypeCell: BusinessTableViewCell?
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -118,14 +119,14 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func doSearchWithParams(params: [String: String]) {
         var term = "restaurants"
         if searchBar.text != "" {
-            let term = searchBar.text
+            term = searchBar.text
         }
         client.doSearch(term, coordinates: userCoordinate, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             let resultsDict = response as NSDictionary
             
             let businessResults = response["businesses"] as NSArray
-            
-            print(businessResults)
+//            
+//            print(businessResults)
             
             self.results = BusinessModel.resultsFromArray(businessResults)
             
@@ -151,7 +152,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         searchBar.resignFirstResponder()
         view.endEditing(true)
         // perform search
-        searchParams["term"] = searchBar.text
+//        searchParams["term"] = searchBar.text
         doSearchWithParams(searchParams)
     }
     
@@ -161,22 +162,10 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func didSelectSearchWithParameters(params: [String: String]) {
-//        let searchTerm = string
-        println("Search requested for \(params)")
-        
-//        var parameters = getSearchParams()
-//        parameters["term"] = searchBar.text
-        
-        
+        searchParams = params
         doSearchWithParams(params)
     }
     
-//    func getSearchParams() -> [String: String] {
-//        if userCoordinate != nil {
-//            searchParams["llc"] = "\(userCoordinate!.latitude),\(userCoordinate!.longitude)"
-//        }
-//        return searchParams
-//    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "filterSegue") {
