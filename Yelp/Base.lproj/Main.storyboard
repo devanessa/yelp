@@ -102,6 +102,26 @@
                                             <outlet property="reviewCountLabel" destination="Wvx-Jk-5Wk" id="OWU-sG-shb"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="spinnerCell" rowHeight="45" id="TZs-5m-YCQ" customClass="BusinessTableViewCell" customModule="Yelp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TZs-5m-YCQ" id="TbU-RX-oBl">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ha9-RJ-xwk">
+                                                    <rect key="frame" x="290" y="13" width="20" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="20" id="DQT-uF-cix"/>
+                                                        <constraint firstAttribute="width" constant="20" id="o79-CX-XYg"/>
+                                                    </constraints>
+                                                </activityIndicatorView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="ha9-RJ-xwk" secondAttribute="centerY" id="cxS-LW-3a6"/>
+                                                <constraint firstAttribute="centerX" secondItem="ha9-RJ-xwk" secondAttribute="centerX" id="rbB-fa-4ds"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                 </prototypes>
                             </tableView>
                         </subviews>

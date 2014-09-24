@@ -19,9 +19,7 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     var client: YelpClient!
     var results: [BusinessModel] = []
     var searchBar: UISearchBar!
-    
-    let queryLimit = 25
-    var queryOffset = 0
+    var noMoreResults = false
     
     var searchParams = [String: String]()
     
@@ -73,7 +71,11 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return results.count
+        if noMoreResults {
+            return results.count
+        } else {
+            return results.count + 1
+        }
     }
     
     func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -81,33 +83,43 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reviewCell") as BusinessTableViewCell
-        // let del
-        let business = results[indexPath.row] as BusinessModel
-        cell.businessLabel.text = business.name
-        cell.addressLabel.text = business.address
-        cell.reviewCountLabel.text = "\(business.numReviews) Reviews"
-
-        cell.ratingImageView.setImageWithURL(NSURL(string: business.ratingURL))
-        
-        cell.businessImageView.alpha = 0.0
-
-        if business.distance != nil {
-            cell.distanceLabel.text = String(format: "%.2f mi", business.distance!)
+        if indexPath.row == self.results.count {
+            let cell = tableView.dequeueReusableCellWithIdentifier("spinnerCell") as UITableViewCell
+            if !noMoreResults {
+                doSearchWithParams(searchParams)
+            } else {
+                tableView.reloadData()
+            }
+            return cell
         } else {
-            cell.distanceLabel.text = ""
+            let cell = tableView.dequeueReusableCellWithIdentifier("reviewCell") as BusinessTableViewCell
+            // let del
+            let business = results[indexPath.row] as BusinessModel
+            cell.businessLabel.text = business.name
+            cell.addressLabel.text = business.address
+            cell.reviewCountLabel.text = "\(business.numReviews) Reviews"
+
+            cell.ratingImageView.setImageWithURL(NSURL(string: business.ratingURL))
+            
+            cell.businessImageView.alpha = 0.0
+
+            if business.distance != nil {
+                cell.distanceLabel.text = String(format: "%.2f mi", business.distance!)
+            } else {
+                cell.distanceLabel.text = ""
+            }
+            if business.profileURL != nil {
+                cell.businessImageView.setImageWithURL(NSURL(string: business.profileURL!))
+                UIView.animateWithDuration(0.2, animations: {
+                    cell.businessImageView.alpha = 1.0
+                })
+            } else {
+                cell.businessImageView.image = UIImage(named: "blackyelp.png")
+            }
+            cell.categoriesLabel.text = business.categories
+            
+            return cell
         }
-        if business.profileURL != nil {
-            cell.businessImageView.setImageWithURL(NSURL(string: business.profileURL!))
-            UIView.animateWithDuration(0.5, animations: {
-                cell.businessImageView.alpha = 1.0
-            })
-        } else {
-            cell.businessImageView.image = UIImage(named: "blackyelp.png")
-        }
-        cell.categoriesLabel.text = business.categories
-        
-        return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -121,17 +133,19 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
         if searchBar.text != "" {
             term = searchBar.text
         }
-        client.doSearch(term, coordinates: userCoordinate, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
+        let offset = self.results.count
+        client.doSearch(term, offset: offset, coordinates: userCoordinate, parameters: params, success: { (operation: AFHTTPRequestOperation!, response: AnyObject!) -> Void in
             let resultsDict = response as NSDictionary
             
             let businessResults = response["businesses"] as NSArray
 //            
 //            print(businessResults)
-            
-            self.results = BusinessModel.resultsFromArray(businessResults)
-            
+            if businessResults.count > 0 {
+                self.results += BusinessModel.resultsFromArray(businessResults)
+            } else {
+                self.noMoreResults = true
+            }
             self.tableView.reloadData()
-
             }, failure: { (operation: AFHTTPRequestOperation!, error: NSError!) -> Void in
                 println(error)
         })
@@ -151,8 +165,8 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         view.endEditing(true)
+        clearSearchResults()
         // perform search
-//        searchParams["term"] = searchBar.text
         doSearchWithParams(searchParams)
     }
     
@@ -162,10 +176,15 @@ class MainViewController: UIViewController, UITableViewDataSource, UITableViewDe
     }
     
     func didSelectSearchWithParameters(params: [String: String]) {
+        clearSearchResults()
         searchParams = params
         doSearchWithParams(params)
     }
     
+    func clearSearchResults() {
+        self.results = []
+        self.noMoreResults = false
+    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
         if (segue.identifier == "filterSegue") {

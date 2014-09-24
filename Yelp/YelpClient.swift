@@ -39,7 +39,7 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         return self.GET("search", parameters: parameters, success: success, failure: failure)
     }
     
-    func doSearch(term: String, location: String = "San Francisco", coordinates: CLLocationCoordinate2D?, parameters: [String: String]?, success: (AFHTTPRequestOperation!, AnyObject!) -> Void, failure: (AFHTTPRequestOperation!, NSError!) -> Void) -> AFHTTPRequestOperation! {
+    func doSearch(term: String, offset: Int, location: String = "San Francisco", coordinates: CLLocationCoordinate2D?, parameters: [String: String]?, success: (AFHTTPRequestOperation!, AnyObject!) -> Void, failure: (AFHTTPRequestOperation!, NSError!) -> Void) -> AFHTTPRequestOperation! {
         var params = ["term": term]
         if coordinates != nil {
             params["ll"] = "\(coordinates!.latitude),\(coordinates!.longitude)"
@@ -52,6 +52,9 @@ class YelpClient: BDBOAuth1RequestOperationManager {
         }
         if params["radius_filter"] != nil && params["radius_filter"] == "auto" {
             params["radius_filter"] = nil
+        }
+        if offset > 0 {
+            params["offset"] = "\(offset)"
         }
         println("search params: \(params)")
         return self.GET("search", parameters: params, success: success, failure: failure)
